@@ -1,0 +1,14 @@
+User Story 1
+As a developer, I want to create an empty deque, so that I can begin collecting elements without special setup.
+
+User Story 2
+As a developer, I want to add elements at either end of a deque, so that I can control their processing order.
+
+User Story 3
+As a developer, I want to remove elements from either end of a deque, so that I can retrieve the next element required by my algorithm.
+
+User Story 4
+As a developer, I want to check a deque's size and whether it is empty, so that I can make safe decisions before processing its elements.
+
+User Story 5
+As a developer, I want to remove the second item from the front of a deque, so that I can process a queued item out of order while preserving the front item.
