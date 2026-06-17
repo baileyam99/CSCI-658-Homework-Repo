@@ -34,7 +34,7 @@ public class Change
   	   int[] changes = new int[5];
 
 
-  	   if(change > 0)
+  	   if(change >= 1)
   	   {
   		   dollars=change/100;
   		   changes[0]=dollars;

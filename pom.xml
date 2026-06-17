@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.15</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -55,11 +55,12 @@
 
                 <configuration>
                     <targetClasses>
-                        <param>Homework_8.PitestSmokeCheck*</param>
+                        <param>Homework_8.Change*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>PitestSmokeCheckTest*</param>
+                        <param>ChangeTest*</param>
                     </targetTests>
+                    <mutationThreshold>100</mutationThreshold>
                 </configuration>
             </plugin>
         </plugins>
