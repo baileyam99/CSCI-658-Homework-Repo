@@ -75,10 +75,6 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
-    <build>
-        <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -109,7 +105,7 @@
                         <param>Homework_8.Change*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>ChangeTest*</param>
+                        <param>ChangeHw8Test*</param>
                     </targetTests>
                     <mutationThreshold>100</mutationThreshold>
                 </configuration>
