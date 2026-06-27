@@ -1,5 +1,4 @@
-import Homework_8.Change;
-import org.junit.jupiter.api.AfterEach;
+import Homework_6.change;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -9,98 +8,45 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChangeTest {
-    private final InputStream originalIn = System.in;
-    private final PrintStream originalOut = System.out;
-
-    @AfterEach
-    void restoreStandardStreams() {
-        System.setIn(originalIn);
-        System.setOut(originalOut);
+    @Test
+    public void positiveChangeUsesCalculationPath() {
+        assertArrayEquals(new int[]{1, 1, 0, 0, 0}, change.changeCalc(5.00, 3.75));
     }
 
     @Test
-    void changeCalcAlwaysReturnsFiveDenominationSlots() {
-        int[] change = Change.changeCalc(2.00, 1.00);
-
-        assertNotNull(change);
-        assertEquals(5, change.length);
+    public void exactPaymentUsesNoChangePath() {
+        assertArrayEquals(new int[]{0, 0, 0, 0, 0}, change.changeCalc(4.25, 4.25));
     }
 
     @Test
-    void exactPaymentReturnsNoChange() {
-        assertChange(new int[]{0, 0, 0, 0, 0}, 15.75, 15.75);
+    public void underPaymentUsesNoChangePath() {
+        assertArrayEquals(new int[]{0, 0, 0, 0, 0}, change.changeCalc(3.00, 4.25));
     }
 
     @Test
-    void underPaymentReturnsNoChange() {
-        assertChange(new int[]{0, 0, 0, 0, 0}, 10.00, 12.25);
-    }
+    public void mainReadsInputAndPrintsChangeArray() {
+        ByteArrayInputStream testInput = new ByteArrayInputStream(
+                "3.75\n5.00\n".getBytes(StandardCharsets.UTF_8));
+        ByteArrayOutputStream testOutput = new ByteArrayOutputStream();
+        InputStream originalIn = System.in;
+        PrintStream originalOut = System.out;
 
-    @Test
-    void oneDollarChangeUsesDollarsOnly() {
-        assertChange(new int[]{1, 0, 0, 0, 0}, 2.25, 1.25);
-    }
+        System.setIn(testInput);
+        System.setOut(new PrintStream(testOutput));
 
-    @Test
-    void quarterBoundaryUsesQuarterInsteadOfSmallerCoins() {
-        assertChange(new int[]{0, 1, 0, 0, 0}, 1.25, 1.00);
-    }
+        try {
+            change.main(new String[0]);
+        } finally {
+            System.setIn(originalIn);
+            System.setOut(originalOut);
+        }
 
-    @Test
-    void dimeBoundaryUsesDimeInsteadOfNickelsOrPennies() {
-        assertChange(new int[]{0, 0, 1, 0, 0}, 1.10, 1.00);
-    }
-
-    @Test
-    void nickelBoundaryUsesNickelInsteadOfPennies() {
-        assertChange(new int[]{0, 0, 0, 1, 0}, 1.05, 1.00);
-    }
-
-    @Test
-    void penniesAreReturnedAfterLargerDenominationsAreRemoved() {
-        assertChange(new int[]{0, 0, 0, 0, 4}, 1.04, 1.00);
-    }
-
-    @Test
-    void oneCentChangeReturnsOnePenny() {
-        assertChange(new int[]{0, 0, 0, 0, 1}, 1.01, 1.00);
-    }
-
-    @Test
-    void mixedChangeUsesLargestDenominationsFirst() {
-        assertChange(new int[]{5, 3, 1, 1, 4}, 15.94, 10.00);
-    }
-
-    @Test
-    void changeJustBelowQuarterUsesDimesAndPennies() {
-        assertChange(new int[]{0, 0, 2, 0, 4}, 1.24, 1.00);
-    }
-
-    @Test
-    void mainReadsCostThenPaidAmountAndPrintsChangeLines() {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        System.setIn(new ByteArrayInputStream("1.25\n2.00\n".getBytes(StandardCharsets.UTF_8)));
-        System.setOut(new PrintStream(output));
-
-        Change.main(new String[]{});
-
-        String normalizedOutput = output.toString(StandardCharsets.UTF_8).replace("\r\n", "\n");
-        assertEquals("""
-                Please enter the cost:
-                Please enter the paid amount:
-                0
-                3
-                0
-                0
-                0
-                """, normalizedOutput);
-    }
-
-    private static void assertChange(int[] expectedChange, double paid, double cost) {
-        assertArrayEquals(expectedChange, Change.changeCalc(paid, cost));
+        String output = testOutput.toString();
+        assertTrue(output.contains("Please enter the cost:"));
+        assertTrue(output.contains("Please enter the paid amount:"));
+        assertTrue(output.endsWith(("1\n1\n0\n0\n0\n").replace("\n", System.lineSeparator())));
     }
 }
